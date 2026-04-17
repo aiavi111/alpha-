@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alpha Development</title>
+  <meta name="description" content="Alpha Development — современные жилые, коммерческие и resort-проекты с акцентом на архитектуру, качество и долгосрочную ценность." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #edf3fa;
+      --bg-soft: #f7fbff;
+      --card: rgba(255,255,255,0.92);
+      --line: rgba(22, 58, 105, 0.10);
+      --line-strong: rgba(31, 79, 141, 0.14);
+      --text: #162b4c;
+      --muted: #5f7390;
+      --blue: #2f77ea;
+      --blue-soft: #d8e8ff;
+      --shadow: 0 20px 55px rgba(27, 63, 118, 0.08);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --container: 1220px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #eef4fa 0%, #eaf1f8 100%);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; width: 100%; }
+    button, input, textarea { font: inherit; }
+
+    .container {
+      width: min(var(--container), calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: rgba(255,255,255,0.66);
+      border-bottom: 1px solid transparent;
+      transition: .25s ease;
+    }
+    .header.scrolled {
+      background: rgba(255,255,255,0.84);
+      border-color: var(--line);
+      box-shadow: 0 10px 24px rgba(30, 68, 122, 0.05);
+    }
+    .nav {
+      min-height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: #fff;
+      padding: 7px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      flex: 0 0 auto;
+    }
+    .brand-text {
+      display: grid;
+      gap: 4px;
+    }
+    .brand-text strong {
+      font-size: 14px;
+      letter-spacing: .12em;
+    }
+    .brand-text span {
+      font-size: 12px;
+      letter-spacing: .06em;
+      color: var(--muted);
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      color: var(--muted);
+    }
+    .nav-links a { transition: .2s ease; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-button {
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .hero {
+      position: relative;
+      padding: 92px 0 64px;
+      overflow: clip;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(239,245,251,0.96) 0%, rgba(239,245,251,0.92) 28%, rgba(239,245,251,0.66) 50%, rgba(239,245,251,0.22) 72%, rgba(239,245,251,0.06) 100%),
+        url('assets/hero-bg.png') center/cover no-repeat;
+      z-index: 0;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 48px;
+      align-items: center;
+      min-height: 760px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 50px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,0.75);
+      letter-spacing: .20em;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--blue);
+      box-shadow: 0 8px 18px rgba(29,66,120,.04);
+    }
+    .hero-copy h1,
+    .section-head h2,
+    .copy h2,
+    .contact-copy h2 {
+      margin: 22px 0 18px;
+      font-size: clamp(46px, 6vw, 84px);
+      line-height: .88;
+      letter-spacing: -0.055em;
+      max-width: 8.8ch;
+    }
+    .hero-copy h1 span { color: var(--blue); }
+    .hero-copy p {
+      max-width: 590px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.82;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+    }
+    .button {
+      min-height: 58px;
+      padding: 0 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary {
+      background: linear-gradient(135deg, #6eb1ff 0%, #2f77ea 100%);
+      color: #fff;
+      box-shadow: 0 18px 30px rgba(47,119,234,.18);
+    }
+    .button-secondary {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--line-strong);
+      color: var(--text);
+    }
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 38px;
+      max-width: 920px;
+    }
+    .stat {
+      min-height: 134px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--line);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .stat strong {
+      display: block;
+      font-size: 42px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .stat span { color: var(--muted); font-size: 16px; line-height: 1.55; }
+
+    .hero-showcase {
+      position: relative;
+      min-height: 760px;
+    }
+    .card {
+      position: absolute;
+      overflow: hidden;
+      border-radius: 34px;
+      background: rgba(255,255,255,.85);
+      border: 1px solid rgba(255,255,255,.75);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .card img { height: 100%; object-fit: cover; }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 44%;
+      background: linear-gradient(180deg, transparent, rgba(245,249,254,.95));
+    }
+    .card-content {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 20px;
+      z-index: 1;
+    }
+    .chip {
+      display: inline-flex;
+      min-height: 42px;
+      padding: 0 18px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(255,255,255,.88);
+      border: 1px solid var(--line);
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .20em;
+      font-size: 11px;
+    }
+    .card-content h3 {
+      margin: 14px 0 8px;
+      font-size: 28px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+    .card-content p {
+      margin: 0;
+      font-size: 16px;
+      color: var(--muted);
+    }
+    .card-left-top {
+      top: 24px;
+      left: 8px;
+      width: 260px;
+      height: 330px;
+      animation: floatA 6s ease-in-out infinite;
+    }
+    .card-center {
+      top: 92px;
+      right: 6px;
+      width: 470px;
+      height: 610px;
+      animation: floatB 8s ease-in-out infinite;
+    }
+    .card-left-bottom {
+      left: 58px;
+      bottom: 18px;
+      width: 300px;
+      height: 360px;
+      animation: floatC 7s ease-in-out infinite;
+    }
+
+    .trust {
+      padding: 18px 0 0;
+    }
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 24px;
+    }
+    .trust-card,
+    .panel,
+    .mini,
+    .project,
+    .gallery-item,
+    .contact-box,
+    .benefit,
+    .form input,
+    .form textarea {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .trust-card {
+      border-radius: 26px;
+      padding: 28px;
+      min-height: 190px;
+    }
+    .trust-card span {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .20em;
+      font-size: 12px;
+    }
+    .trust-card strong {
+      font-size: 20px;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    section.section {
+      padding: 138px 0;
+    }
+    .about-grid,
+    .contact-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+    .copy h2,
+    .section-head h2,
+    .contact-copy h2 { max-width: 11.2ch; }
+    .copy p,
+    .section-head p,
+    .project-info p,
+    .contact-copy p,
+    .benefit p,
+    .mini p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.88;
+      margin: 0;
+    }
+    .copy p + p { margin-top: 20px; }
+
+    .panel {
+      border-radius: 34px;
+      padding: 38px;
+    }
+    .panel-top {
+      padding-bottom: 24px;
+      margin-bottom: 26px;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-top span {
+      display: block;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .20em;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .panel-top strong {
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      display: block;
+      max-width: 11ch;
+    }
+    .benefits {
+      display: grid;
+      gap: 18px;
+    }
+    .benefit {
+      border-radius: 26px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+    .benefit b,
+    .mini b {
+      display: grid;
+      place-items: center;
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: var(--blue-soft);
+      font-size: 20px;
+    }
+
+    .section-head {
+      margin-bottom: 42px;
+      max-width: 980px;
+    }
+    .section-head h2 { max-width: 11ch; }
+    .section-head p { max-width: 1050px; }
+
+    .projects-list {
+      display: grid;
+      gap: 34px;
+    }
+    .project {
+      border-radius: 30px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      min-height: 430px;
+    }
+    .project.reverse {
+      grid-template-columns: .92fr 1.08fr;
+    }
+    .project.reverse .project-media { order: 2; }
+    .project.reverse .project-info { order: 1; }
+    .project-media { min-height: 430px; }
+    .project-media img { height: 100%; object-fit: cover; }
+    .project-info {
+      padding: 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .project-tag {
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .20em;
+      font-size: 12px;
+    }
+    .project-info h3 {
+      margin: 16px 0 14px;
+      font-size: clamp(30px, 4vw, 48px);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+    .project-info ul {
+      list-style: none;
+      padding: 0;
+      margin: 24px 0 0;
+      display: grid;
+      gap: 12px;
+    }
+    .project-info li {
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+      color: #385274;
+      font-size: 16px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      grid-auto-rows: 250px;
+      gap: 18px;
+    }
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 26px;
+    }
+    .gallery-item img {
+      height: 100%;
+      object-fit: cover;
+      transition: transform .45s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-item.tall { grid-row: span 2; }
+    .gallery-item.wide { grid-column: span 2; }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 22px;
+    }
+    .mini {
+      border-radius: 28px;
+      padding: 30px;
+      min-height: 320px;
+    }
+    .mini h3 {
+      margin: 22px 0 12px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .contact-box {
+      border-radius: 34px;
+      padding: 46px;
+    }
+
+    .contact-box {
+      grid-template-columns: .94fr 1.06fr;
+      gap: 40px;
+    }
+    .contact-copy {
+      max-width: 560px;
+      padding-right: 10px;
+    }
+    .contact-copy h2 {
+      font-size: clamp(42px, 4.5vw, 72px);
+      line-height: .98;
+      max-width: 7.2ch;
+      margin-bottom: 18px;
+    }
+    .contact-copy p {
+      max-width: 560px;
+    }
+    .form {
+      display: grid;
+      gap: 18px;
+    }
+    .form input,
+    .form textarea {
+      width: 100%;
+      border-radius: 22px;
+      min-height: 78px;
+      padding: 0 26px;
+      outline: none;
+      color: var(--text);
+      font-size: 18px;
+    }
+    .form textarea {
+      min-height: 220px;
+      padding: 24px 26px;
+      resize: vertical;
+    }
+    .form .button-primary {
+      width: 100%;
+      min-height: 74px;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .footer {
+      padding: 24px 0 40px;
+      color: var(--muted);
+    }
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: .75s ease;
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes floatA {
+      0%,100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-10px) rotate(0deg); }
+    }
+    @keyframes floatB {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+    @keyframes floatC {
+      0%,100% { transform: translateY(0) rotate(2deg); }
+      50% { transform: translateY(12px) rotate(0deg); }
+    }
+
+    @media (max-width: 1120px) {
+      .hero-inner,
+      .about-grid,
+      .contact-box,
+      .project,
+      .project.reverse {
+        grid-template-columns: 1fr;
+      }
+      .project.reverse .project-media,
+      .project.reverse .project-info { order: initial; }
+      .hero-showcase {
+        min-height: 600px;
+      }
+      .card-left-top,
+      .card-left-bottom { display: none; }
+      .card-center {
+        top: 0;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .process-grid,
+      .trust-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item.wide { grid-column: span 2; }
+    }
+
+    @media (max-width: 860px) {
+      .nav-links, .nav-button { display: none; }
+      .hero { padding: 64px 0 40px; }
+      .hero-inner { min-height: auto; gap: 30px; }
+      .hero-copy h1,
+      .copy h2,
+      .section-head h2,
+      .contact-copy h2 { max-width: none; }
+      .hero-showcase { min-height: 480px; }
+      .card-center {
+        width: min(100%, 420px);
+        height: 480px;
+      }
+      .hero-stats,
+      .trust-grid,
+      .process-grid,
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.wide,
+      .gallery-item.tall { grid-column: auto; grid-row: auto; }
+      .project-media { min-height: 300px; }
+    }
+
+    @media (max-width: 540px) {
+      .container { width: min(var(--container), calc(100% - 24px)); }
+      .hero-copy h1,
+      .copy h2,
+      .section-head h2,
+      .contact-copy h2 { font-size: clamp(40px, 14vw, 58px); }
+      .hero-copy p,
+      .copy p,
+      .section-head p,
+      .contact-copy p,
+      .project-info p,
+      .mini p,
+      .benefit p { font-size: 15px; }
+      section.section { padding: 96px 0; }
+      .stat, .trust-card, .project-info, .mini, .panel, .contact-box { padding: 22px; }
+      .hero-actions { flex-direction: column; }
+      .button { width: 100%; }
+      .benefit {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header" id="top">
+    <div class="container nav">
+      <a href="#top" class="brand">
+        <img src="assets/logo.png" alt="Alpha Development" class="brand-logo">
+        <span class="brand-text">
+          <strong>ALPHA DEVELOPMENT</strong>
+          <span>Строительная компания</span>
+        </span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#about">О компании</a>
+        <a href="#projects">Проекты</a>
+        <a href="#process">Подход</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+
+      <a href="#contact" class="nav-button">Оставить заявку</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy reveal">
+          <span class="eyebrow">BISHKEK / ISSYK-KUL / DEVELOPMENT</span>
+          <h1>Проекты,<br><span>формирующие</span><br>современный<br>облик<br>города.</h1>
+          <p>
+            Alpha Development реализует жилые, коммерческие и resort-проекты с акцентом на архитектуру,
+            качество исполнения и долгосрочную ценность для города, инвесторов и будущих жителей.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#projects" class="button button-primary">Смотреть проекты</a>
+            <a href="#about" class="button button-secondary">О компании</a>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>01</strong>
+              <span>архитектурный подход</span>
+            </div>
+            <div class="stat">
+              <strong>03</strong>
+              <span>направления развития</span>
+            </div>
+            <div class="stat">
+              <strong>∞</strong>
+              <span>долгосрочная ценность</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-showcase reveal">
+          <article class="card card-left-top">
+            <img src="https://cdn.house.kg/house/building-images/47fc91e9968611e55aa9183a6e392474.jpg" alt="ЖК Весна">
+            <div class="card-content">
+              <span class="chip">ЖИЛОЙ ДОМ</span>
+              <h3>Весна</h3>
+              <p>Кок-Жар, Бишкек</p>
+            </div>
+          </article>
+
+          <article class="card card-center">
+            <img src="https://cdn.house.kg/house/building-images/1a13313274e60b60354a621f9d0ac8fa.jpg" alt="Capital Towers">
+            <div class="card-content">
+              <span class="chip">БИЗНЕС-КЛАСС</span>
+              <h3>Capital Towers</h3>
+              <p>VEFA, Бишкек</p>
+            </div>
+          </article>
+
+          <article class="card card-left-bottom">
+            <img src="https://cdn.house.kg/house/building-images/ddec5aa02214396a963322ca0c9a687a.jpg" alt="Alpha White Resort">
+            <div class="card-content">
+              <span class="chip">RESORT</span>
+              <h3>Alpha White Resort</h3>
+              <p>Кош-Көл, Иссык-Куль</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust">
+      <div class="container trust-grid reveal">
+        <article class="trust-card">
+          <span>Архитектура</span>
+          <strong>Чистые линии, продуманная геометрия и внимание к каждой детали.</strong>
+        </article>
+        <article class="trust-card">
+          <span>Визуальный подход</span>
+          <strong>Свет, пропорции и материалы, формирующие цельный и современный образ.</strong>
+        </article>
+        <article class="trust-card">
+          <span>Подача</span>
+          <strong>Сдержанная премиальная эстетика без лишнего визуального шума.</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container about-grid">
+        <div class="copy reveal">
+          <span class="eyebrow">О компании</span>
+          <h2>Современный девелопмент с акцентом на архитектуру, качество и ясные решения.</h2>
+          <p>
+            Alpha Development создаёт объекты, в которых сочетаются эстетика, функциональность и практическая ценность.
+            Каждый проект разрабатывается с вниманием к локации, потребностям будущих жителей и устойчивости
+            в долгосрочной перспективе.
+          </p>
+          <p>
+            Подход компании основан на уважении к городской среде, продуманной планировке, качественных материалах
+            и понятной коммуникации на каждом этапе реализации.
+          </p>
+        </div>
+
+        <div class="panel reveal">
+          <div class="panel-top">
+            <span>Ключевые принципы</span>
+            <strong>Почему выбирают Alpha Development</strong>
+          </div>
+          <div class="benefits">
+            <div class="benefit">
+              <b>01</b>
+              <p>Архитектурная выразительность и внимание к контексту каждой локации.</p>
+            </div>
+            <div class="benefit">
+              <b>02</b>
+              <p>Сбалансированное сочетание статуса, комфорта и инвестиционной привлекательности.</p>
+            </div>
+            <div class="benefit">
+              <b>03</b>
+              <p>Системный подход к проектированию, реализации и сопровождению объектов.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Ключевые проекты</span>
+          <h2>Портфель, отражающий разные форматы современной недвижимости.</h2>
+          <p>
+            В портфеле Alpha Development представлены жилые, коммерческие и resort-объекты, объединённые единым стандартом качества,
+            архитектурной выразительности и продуманной среды.
+          </p>
+        </div>
+
+        <div class="projects-list">
+          <article class="project reveal">
+            <div class="project-media">
+              <img src="https://cdn.house.kg/house/building-images/47fc91e9968611e55aa9183a6e392474.jpg" alt="ЖК Весна">
+            </div>
+            <div class="project-info">
+              <span class="project-tag">Жилая недвижимость</span>
+              <h3>ЖК «Весна»</h3>
+              <p>
+                Жилой проект в городской локации, сочетающий современную архитектуру,
+                спокойную пластику фасадов и комфортную среду для повседневной жизни.
+              </p>
+              <ul>
+                <li>Кок-Жар, Бишкек</li>
+                <li>Современный жилой формат</li>
+                <li>Акцент на комфорт и среду</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project reverse reveal">
+            <div class="project-media">
+              <img src="https://cdn.house.kg/house/building-images/f48aa74cfb2dfa253d31a29e03635968.jpg" alt="Capital Towers">
+            </div>
+            <div class="project-info">
+              <span class="project-tag">Коммерческий / бизнес-класс</span>
+              <h3>Capital Towers</h3>
+              <p>
+                Проект, ориентированный на статусную городскую аудиторию и динамичную деловую среду.
+                Архитектура объекта подчёркивает современный характер локации и её потенциал развития.
+              </p>
+              <ul>
+                <li>Район VEFA, Бишкек</li>
+                <li>Бизнес-класс</li>
+                <li>Выразительный городской образ</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project reveal">
+            <div class="project-media">
+              <img src="https://cdn.house.kg/house/building-images/ddec5aa02214396a963322ca0c9a687a.jpg" alt="Alpha White Resort">
+            </div>
+            <div class="project-info">
+              <span class="project-tag">Resort недвижимость</span>
+              <h3>Alpha White Resort</h3>
+              <p>
+                Resort-проект, в котором архитектурная лёгкость сочетается с атмосферой приватности,
+                отдыха и долгосрочной инвестиционной привлекательности.
+              </p>
+              <ul>
+                <li>Кош-Көл, Иссык-Куль</li>
+                <li>Формат отдыха и инвестиций</li>
+                <li>Современная курортная среда</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Галерея проектов</span>
+          <h2>Архитектура, масштаб и детали, формирующие образ бренда.</h2>
+        </div>
+
+        <div class="gallery-grid reveal">
+          <figure class="gallery-item tall">
+            <img src="https://cdn.house.kg/house/building-images/ddec5aa02214396a963322ca0c9a687a.jpg" alt="Alpha White Resort">
+          </figure>
+          <figure class="gallery-item">
+            <img src="https://cdn.house.kg/house/building-images/57ec7cf5d6f1cc3ed158553c2dac16c0.jpg" alt="Alpha White Resort villas">
+          </figure>
+          <figure class="gallery-item">
+            <img src="https://cdn.house.kg/house/building-images/1a13313274e60b60354a621f9d0ac8fa.jpg" alt="Capital Towers facade">
+          </figure>
+          <figure class="gallery-item wide">
+            <img src="https://cdn.house.kg/house/building-images/896918e0126421a0160d902484004c50.jpg" alt="ЖК Весна facade">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="process">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Подход</span>
+          <h2>Как строится работа над каждым проектом</h2>
+        </div>
+
+        <div class="process-grid">
+          <article class="mini reveal">
+            <b>01</b>
+            <h3>Идея и анализ</h3>
+            <p>На первом этапе оцениваются локация, потенциал территории и задачи будущего объекта.</p>
+          </article>
+          <article class="mini reveal">
+            <b>02</b>
+            <h3>Проектирование</h3>
+            <p>Архитектурные и планировочные решения формируются с учётом функциональности, эстетики и долговечности.</p>
+          </article>
+          <article class="mini reveal">
+            <b>03</b>
+            <h3>Реализация</h3>
+            <p>На этапе строительства особое внимание уделяется качеству исполнения, срокам и системному контролю.</p>
+          </article>
+          <article class="mini reveal">
+            <b>04</b>
+            <h3>Результат</h3>
+            <p>В финале создаётся целостный объект, отвечающий ожиданиям жителей, партнёров и инвесторов.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="contact-box reveal">
+          <div class="contact-copy">
+            <span class="eyebrow">Обратная связь</span>
+            <h2>Готовы обсудить проект, сотрудничество или индивидуальный запрос.</h2>
+            <p>
+              Оставьте контактные данные, и команда Alpha Development свяжется с Вами,
+              чтобы подробнее обсудить объект, формат сотрудничества или интересующее предложение.
+            </p>
+          </div>
+
+          <form class="form" onsubmit="event.preventDefault()">
+            <input type="text" placeholder="Ваше имя" />
+            <input type="tel" placeholder="Телефон" />
+            <textarea placeholder="Ваш комментарий"></textarea>
+            <button class="button button-primary" type="submit">Отправить заявку</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <span>Alpha Development</span>
+      <a href="#top">Наверх ↑</a>
+    </div>
+  </footer>
+
+  <script>
+    const header = document.querySelector('.header');
+    const reveals = document.querySelectorAll('.reveal');
+
+    const onScroll = () => {
+      if (window.scrollY > 8) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    reveals.forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
