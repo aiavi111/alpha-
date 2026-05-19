@@ -13,3 +13,6 @@
 - логотип: assets/alpha-logo.png
 - фото проектов: ссылки в index.html
 - тексты и контакты: index.html
+
+
+ https://aiavi111.github.io/alpha-/
